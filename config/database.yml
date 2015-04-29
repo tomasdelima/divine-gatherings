@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  pool: 5
+  timeout: 5000
+  encoding: unicode
+
+development:
+  <<: *default
+  database: divine_gatherings_development
+  username: divine_gatherings
+  password: divine_gatherings
+  host: localhost
+
+test:
+  <<: *default
+
+production:
+  <<: *default
