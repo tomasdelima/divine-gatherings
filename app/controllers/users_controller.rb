@@ -1,9 +1,13 @@
 class UsersController < ApplicationController
   def import_facebook_contacts
-    @contacts = request.env['omnicontacts.contacts']
     @user = find_or_build_user(request.env['omnicontacts.user'])
     if @user.save
-      render json: {message: 'User saved successfully'}
+      @contacts = []
+      request.env['omnicontacts.contacts'].each do |c|
+        contact = find_or_build_user(c)
+        @contacts << contact if contact.save
+      end
+      render json: {message: 'User saved successfully', user: @user, contacts: @contacts}
     end
   end
 
