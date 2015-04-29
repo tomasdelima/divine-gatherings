@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
-  def import_facebook_contacts
+  def import_facebook_friends
     @user = find_or_build_user(request.env['omnicontacts.user'])
     if @user.save
-      @contacts = []
-      request.env['omnicontacts.contacts'].each do |c|
-        contact = find_or_build_user(c)
-        @contacts << contact if contact.save
+      @friends = []
+      request.env['omnicontacts.contacts'].each do |friend_params|
+        friend = find_or_build_user(friend_params)
+        if friend.save
+          Friendship.find_or_create_by(user: @user, friend: friend)
+          @friends << friend
+        end
       end
-      render json: {message: 'User saved successfully', user: @user, contacts: @contacts}
+      render json: {message: 'User saved successfully', user: @user, friends: @friends}
     end
   end
 
