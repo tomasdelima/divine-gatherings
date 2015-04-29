@@ -7,6 +7,7 @@ class UsersController < ApplicationController
         friend = find_or_build_user(friend_params)
         if friend.save
           Friendship.find_or_create_by(user: @user, friend: friend)
+          Friendship.find_or_create_by(user: friend, friend: @user)
           @friends << friend
         end
       end
